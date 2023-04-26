@@ -1,6 +1,6 @@
 const passContainer = document.querySelector('.pass')
-const copyBtn = document.querySelector('.password i')
 const submit = document.querySelector('.btn')
+const copy = document.querySelector('.password i')
 let length = document.querySelector('.length input')
 const wantUppercase = document.querySelector('.uppercase input')
 const wantLowercase = document.querySelector('.lowercase input')
@@ -36,6 +36,8 @@ function getSymbol() {
     return String.fromCharCode(random)
 }
 
+// =====================================================================================================================================
+
 const functionArr = [
     getUpperCase,
     getLowerCase,
@@ -48,28 +50,35 @@ function generatePassword(array) {
     let newArr = [];
     let position = 0;
     let password = '';
+
+    // making the new array of true conditions
     for (let i = 0; i < 4; i++) {
         if (array[i] == true) {
             newArr[position] = i;
             position++;
         }
     }
+
+    // making the password by using length
     for (let i = 0; i < array[4]; i++) {
-        if (array[4] <= 30) {
+        if (array[4] <= 50) {
             let random = randomNum(0, (newArr.length - 1))
             password += functionArr[newArr[random]]();
         } else {
-            passContainer.innerHTML = 'Should not exceed limit 22'
+            passContainer.value = 'Password length Should not exceed 50'
             return;
         }
     }
-    console.log(password)
-    passContainer.innerHTML = password;
+    passContainer.value = password;
 }
 
-// =====================================================================================================================================
 
 submit.addEventListener('click', () => {
+    try {
+        passContainer.value = '';
+    } catch (err) {
+        console.log(err)
+    }
     let size = parseInt(length.value)
     let arr = [wantUppercase.checked, wantLowercase.checked, wantNumbers.checked, wantSymbol.checked, size]
     let password = generatePassword(arr);
@@ -82,6 +91,19 @@ container.addEventListener('keydown', (e) => {
         let password = generatePassword(arr);
     }
 })
+
+// to copy the code
+let copyText = document.querySelector('.copy')
+copy.addEventListener('click', () => {
+    passContainer.select();
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+    copyText.style = `opacity: 100`
+    setTimeout(() => {
+        copyText.style = `opacity: 0`
+    }, 1000);
+})
+
 
 
 
